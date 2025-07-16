@@ -23,7 +23,7 @@ gradlePlugin {
             implementationClass = "io.hfx.pluginx.resolver.PluginResolverPlugin"
             displayName = "PluginX Resolver — Gradle Plugin Classpath Auto Resolver"
             description = "Automatically resolves and injects plugin classpath dependencies based on pluginManagement resolutionStrategy."
-            tags = listOf("gradle", "plugin", "classpath", "resolver", "dependency", "auto", "injection", "pluginManagement")
+            tags = listOf("classpath-injection", "plugin-resolution", "plugin-classpath", "dependency-management", "pluginManagement")
             website = "https://github.com/neallon/pluginx-resolver"
             vcsUrl = "https://github.com/neallon/pluginx-resolver.git"
         }
