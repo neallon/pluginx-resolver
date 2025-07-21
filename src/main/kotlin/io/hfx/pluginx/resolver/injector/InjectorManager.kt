@@ -47,6 +47,7 @@ class InjectorManager(private val settings: Settings) {
             }
         }
 
-        logger.warn("Failed to resolve dependencies for plugin $coords")
+        // Debug only, no warning
+        logger.debug("No classpath injection needed for plugin {}", coords)
     }
 }
