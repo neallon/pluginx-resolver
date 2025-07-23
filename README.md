@@ -10,7 +10,7 @@
 
 ```kotlin
 plugins {
-    id("io.github.neallon.pluginx.resolver") version "1.0.0"
+    id("io.github.neallon.pluginx.resolver") version "1.0.1"
 }
 ```
 
