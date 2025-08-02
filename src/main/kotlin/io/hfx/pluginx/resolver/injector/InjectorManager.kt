@@ -7,6 +7,7 @@ import io.hfx.pluginx.resolver.strategy.MetadataBasedResolution
 import io.hfx.pluginx.resolver.strategy.PomBasedResolution
 import io.hfx.pluginx.resolver.util.PluginPortalDetector
 import io.hfx.pluginx.resolver.util.PluginRepositoriesLoader
+import io.hfx.pluginx.resolver.util.RepositoryUtils
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.initialization.Settings
 import org.gradle.api.logging.Logging
@@ -61,21 +62,37 @@ class InjectorManager(private val settings: Settings) {
     }
 
     fun injectRepositories() {
-        settings.pluginManagement.repositories.apply {
-            resolvedRepositories.forEach { repo ->
-                maven {
-                    name = repo.name
-                    url = URI(repo.url)
-                    credentials {
-                        username = repo.user
-                        password = repo.password
-                    }
-                    isAllowInsecureProtocol = repo.allowInsecureProtocol
-                }
+        val repoHandler = settings.pluginManagement.repositories
 
-                logger.info("[pluginx-resolver] Injected repository: ${repo.name} ${repo.url}")
-            }
+        val alreadyContainsPluginPortal = repoHandler.any {
+            RepositoryUtils.extractRepositoryUrl(it)?.toString()?.contains("plugins.gradle.org") == true
         }
 
+        if (!alreadyContainsPluginPortal) {
+            repoHandler.gradlePluginPortal()
+            logger.info("[pluginx-resolver] Preserved gradlePluginPortal() to ensure official plugins are resolvable.")
+        }
+
+        resolvedRepositories.forEach { repo ->
+            val alreadyExists = RepositoryUtils.hasRepositoryWithUrl(repoHandler, repo.url)
+            if (!alreadyExists) {
+                repoHandler.maven {
+                    name = repo.name
+                    url = URI(repo.url)
+
+                    if (!repo.user.isNullOrEmpty() && !repo.password.isNullOrEmpty()) {
+                        credentials {
+                            username = repo.user
+                            password = repo.password
+                        }
+                    }
+
+                    isAllowInsecureProtocol = repo.allowInsecureProtocol
+                }
+                logger.info("[pluginx-resolver] Injected repository: ${repo.name} ${repo.url}")
+            } else {
+                logger.info("[pluginx-resolver] Skipped (already present): ${repo.name} ${repo.url}")
+            }
+        }
     }
 }
