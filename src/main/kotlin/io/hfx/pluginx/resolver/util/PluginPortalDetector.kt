@@ -1,5 +1,7 @@
 package io.hfx.pluginx.resolver.util
 
+import java.net.URI
+
 object PluginPortalDetector {
 
     // Gradle 内建插件 ID
@@ -30,7 +32,8 @@ object PluginPortalDetector {
     fun isOfficialPluginRepo(repoUrl: String): Boolean {
         return repoUrl.contains("plugins.gradle.org") ||
                 repoUrl.contains("repo.maven.apache.org") ||
-                repoUrl.contains("mavenCentral()")
+                repoUrl.contains("mavenCentral()") ||
+                URI(repoUrl).scheme == "file"
     }
 
     /**

@@ -6,20 +6,19 @@ import io.hfx.pluginx.resolver.util.PomUtils
 import org.gradle.api.logging.Logging
 import java.net.URI
 
-class PomBasedResolution(
+class InjectedPomResolution(
     private val repos: List<URI>
 ) : ResolutionStrategy {
-
-    private val logger = Logging.getLogger(PomBasedResolution::class.java)
+    private val logger = Logging.getLogger(InjectedPomResolution::class.java)
 
     override fun resolve(coords: PluginCoordinates): List<MavenDependency>? {
-        logger.info("Trying POM-based resolution for {}", coords)
+        logger.info("Trying POM-injected resolution for {}", coords)
 
         for (repo in repos) {
             try {
                 val deps = PomUtils.resolveDependencies(repo.toString(), coords.group, coords.id, coords.version)
                 if (deps.isNotEmpty()) {
-                    logger.info("PomBased Resolved {} dependencies for {} from {}", deps.size, coords, repo)
+                    logger.info("PomInjected Resolved {} dependencies for {} from {}", deps.size, coords, repo)
                     return deps
                 }
             } catch (e: Exception) {

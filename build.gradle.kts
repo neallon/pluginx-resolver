@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.github.neallon"
-version = "1.0.1"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation(gradleApi())
+    implementation("io.github.neallon:repo-properties-resolver:1.0.0")
 }
 
 gradlePlugin {

@@ -10,7 +10,7 @@
 
 ```kotlin
 plugins {
-    id("io.github.neallon.pluginx.resolver") version "1.0.1"
+    id("io.github.neallon.pluginx.resolver") version "1.1.0"
 }
 ```
 
@@ -38,6 +38,46 @@ pluginManagement {
         }
     }
 }
+```
+
+---
+
+## ❌ Disable Automatic Repository Injection
+
+By default, PluginX Resolver automatically injects repositories parsed from Gradle properties files (`~/.gradle/gradle.properties` and project `gradle.properties`) with keys like:
+
+```
+hfx.<repoId>.repo.url=
+hfx.<repoId>.repo.user=
+hfx.<repoId>.repo.password=
+```
+
+To disable this behavior, set in your `settings.gradle.kts`:
+
+```kotlin
+pluginxResolver {
+    autoInjectRepositories = false
+}
+```
+
+---
+
+## 📋 Repository Properties Format
+
+The plugin reads repositories from Gradle properties files with the following naming conventions:
+
+- `hfx.<repoId>.repo.url` - Repository URL
+- `hfx.<repoId>.repo.user` - Username for authentication (optional)
+- `hfx.<repoId>.repo.password` - Password for authentication (optional)
+- `hfx.<repoId>.repo.allowInsecure` - Whether to allow insecure HTTP protocol (optional, defaults true if URL starts with http)
+
+Example:
+
+```
+hfx.myrepo.repo.url=https://my.repo.url/maven
+hfx.myrepo.repo.user=yourUsername
+hfx.myrepo.repo.password=yourPassword
+hfx.myrepo.repo.allowInsecure=false
 ```
 
 ---
